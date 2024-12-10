@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
 interface Track {
   id: string;
@@ -24,6 +24,13 @@ export const useTrackForm = (selectedMonth: number, selectedYear: number) => {
     date: new Date().toISOString().split('T')[0]
   });
 
+  const defaultFormData = useMemo(() => ({
+    name: '',
+    task: '',
+    hours: 0,
+    date: new Date().toISOString().split('T')[0]
+  }), []);
+
   useEffect(() => {
     if (selectedCell) {
       setFormData(prev => ({
@@ -32,21 +39,16 @@ export const useTrackForm = (selectedMonth: number, selectedYear: number) => {
         date: `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-${String(selectedCell.day).padStart(2, '0')}`
       }));
     } else {
-      setFormData({
-        name: '',
-        task: '',
-        hours: 0,
-        date: new Date().toISOString().split('T')[0]
-      });
+      setFormData(defaultFormData);
     }
-  }, [selectedCell, selectedMonth, selectedYear]);
+  }, [selectedCell, selectedMonth, selectedYear, defaultFormData]);
 
-  const handleCellClick = (day: number, task: string) => {
+  const handleCellClick = useCallback((day: number, task: string) => {
     setSelectedCell({ day, task });
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleUpdateTrack = (track: Track) => {
+  const handleUpdateTrack = useCallback((track: Track) => {
     setSelectedTrack(track);
     setFormData({
       name: track.name,
@@ -55,39 +57,32 @@ export const useTrackForm = (selectedMonth: number, selectedYear: number) => {
       date: track.date
     });
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'hours' ? parseFloat(value) || 0 : value
+      [name]: name === 'hours' ? Number(value) : value
     }));
-  };
+  }, []);
 
-  const resetForm = () => {
-    setIsModalOpen(false);
+  const resetForm = useCallback(() => {
+    setSelectedCell(null);
     setSelectedTrack(null);
-    setFormData({
-      name: '',
-      task: '',
-      hours: 0,
-      date: new Date().toISOString().split('T')[0]
-    });
-  };
+    setFormData(defaultFormData);
+    setIsModalOpen(false);
+  }, [defaultFormData]);
 
   return {
     isModalOpen,
     setIsModalOpen,
-    selectedCell,
-    setSelectedCell,
     selectedTrack,
     setSelectedTrack,
     formData,
-    setFormData,
+    handleInputChange,
     handleCellClick,
     handleUpdateTrack,
-    handleInputChange,
     resetForm
   };
 };

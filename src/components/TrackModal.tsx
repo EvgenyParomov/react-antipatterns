@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import styles from './TrackModal.module.css';
 
 interface Track {
@@ -24,7 +25,7 @@ interface TrackModalProps {
   resetForm: () => void;
 }
 
-export const TrackModal = ({
+export const TrackModal = memo(({
   isModalOpen,
   setIsModalOpen,
   selectedTrack,
@@ -34,15 +35,21 @@ export const TrackModal = ({
   handleSubmit,
   resetForm
 }: TrackModalProps) => {
+  const handleClose = useCallback(() => {
+    setIsModalOpen(false);
+    setSelectedTrack(null);
+    resetForm();
+  }, [setIsModalOpen, setSelectedTrack, resetForm]);
+
+  const handleModalClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
+
   if (!isModalOpen) return null;
 
   return (
-    <div className={styles.modalOverlay} onClick={() => {
-      setIsModalOpen(false);
-      setSelectedTrack(null);
-      resetForm();
-    }}>
-      <div className={styles.modal} onClick={e => e.stopPropagation()}>
+    <div className={styles.modalOverlay} onClick={handleClose}>
+      <div className={styles.modal} onClick={handleModalClick}>
         <h2>{selectedTrack ? 'Edit Track' : 'Add Track'}</h2>
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
@@ -102,11 +109,7 @@ export const TrackModal = ({
             <button
               type="button"
               className={styles.button}
-              onClick={() => {
-                setIsModalOpen(false);
-                setSelectedTrack(null);
-                resetForm();
-              }}
+              onClick={handleClose}
               style={{ backgroundColor: '#6c757d' }}
             >
               Cancel
@@ -116,4 +119,4 @@ export const TrackModal = ({
       </div>
     </div>
   );
-};
+});

@@ -1,3 +1,4 @@
+import { memo, useMemo } from 'react';
 import styles from './Table.module.css';
 import { TableHead } from './TableHead';
 import { TableRow } from './TableRow';
@@ -28,7 +29,7 @@ interface TableProps {
   getMonthTotal: () => number;
 }
 
-export const Table = ({
+export const Table = memo(({
   tableContainerRef,
   currentDayRef,
   getVisibleDays,
@@ -44,6 +45,9 @@ export const Table = ({
   getDayTotal,
   getMonthTotal
 }: TableProps) => {
+  const uniqueTasks = useMemo(() => getUniqueTasks(), [getUniqueTasks]);
+  const monthTotal = useMemo(() => getMonthTotal(), [getMonthTotal]);
+
   return (
     <div className={styles.tableContainer} ref={tableContainerRef}>
       <table className={styles.table}>
@@ -55,7 +59,7 @@ export const Table = ({
           selectedYear={selectedYear}
         />
         <tbody>
-          {getUniqueTasks().map(task => (
+          {uniqueTasks.map(task => (
             <TableRow
               key={task}
               task={task}
@@ -70,10 +74,10 @@ export const Table = ({
           <TableSummaryRow
             getVisibleDays={getVisibleDays}
             getDayTotal={getDayTotal}
-            getMonthTotal={getMonthTotal}
+            monthTotal={monthTotal}
           />
         </tbody>
       </table>
     </div>
   );
-};
+});

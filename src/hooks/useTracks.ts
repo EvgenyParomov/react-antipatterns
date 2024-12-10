@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { nanoid } from 'nanoid';
 
 interface Track {
@@ -12,7 +12,7 @@ interface Track {
 export const useTracks = (selectedMonth: number, selectedYear: number) => {
   const [tracks, setTracks] = useState<Track[]>([]);
 
-  const fetchTracks = async () => {
+  const fetchTracks = useCallback(async () => {
     try {
       const response = await fetch('http://localhost:3000/tracks');
       const data = await response.json();
@@ -20,21 +20,21 @@ export const useTracks = (selectedMonth: number, selectedYear: number) => {
     } catch (error) {
       console.error('Error fetching tracks:', error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchTracks();
-  }, [selectedMonth, selectedYear]);
+  }, [selectedMonth, selectedYear, fetchTracks]);
 
-  const getUniqueTasks = () => {
+  const getUniqueTasks = useCallback(() => {
     const monthTracks = tracks.filter(track => {
       const trackDate = new Date(track.date);
       return trackDate.getMonth() === selectedMonth && trackDate.getFullYear() === selectedYear;
     });
     return [...new Set(monthTracks.map(track => track.task))];
-  };
+  }, [tracks, selectedMonth, selectedYear]);
 
-  const getDayTracks = (day: number, task: string) => {
+  const getDayTracks = useCallback((day: number, task: string) => {
     return tracks.filter(track => {
       const trackDate = new Date(track.date);
       return (
@@ -44,9 +44,9 @@ export const useTracks = (selectedMonth: number, selectedYear: number) => {
         track.task === task
       );
     });
-  };
+  }, [tracks, selectedMonth, selectedYear]);
 
-  const getDayTotal = (day: number) => {
+  const getDayTotal = useCallback((day: number) => {
     return tracks
       .filter(track => {
         const trackDate = new Date(track.date);
@@ -57,9 +57,9 @@ export const useTracks = (selectedMonth: number, selectedYear: number) => {
         );
       })
       .reduce((sum, track) => sum + track.hours, 0);
-  };
+  }, [tracks, selectedMonth, selectedYear]);
 
-  const getTaskTotal = (task: string) => {
+  const getTaskTotal = useCallback((task: string) => {
     return tracks
       .filter(track => {
         const trackDate = new Date(track.date);
@@ -70,18 +70,18 @@ export const useTracks = (selectedMonth: number, selectedYear: number) => {
         );
       })
       .reduce((sum, track) => sum + track.hours, 0);
-  };
+  }, [tracks, selectedMonth, selectedYear]);
 
-  const getMonthTotal = () => {
+  const getMonthTotal = useCallback(() => {
     return tracks
       .filter(track => {
         const trackDate = new Date(track.date);
         return trackDate.getMonth() === selectedMonth && trackDate.getFullYear() === selectedYear;
       })
       .reduce((sum, track) => sum + track.hours, 0);
-  };
+  }, [tracks, selectedMonth, selectedYear]);
 
-  const handleDeleteTrack = async (trackId: string) => {
+  const handleDeleteTrack = useCallback(async (trackId: string) => {
     try {
       const response = await fetch(`http://localhost:3000/tracks/${trackId}`, {
         method: 'DELETE',
@@ -100,9 +100,9 @@ export const useTracks = (selectedMonth: number, selectedYear: number) => {
       console.error('Error deleting track:', error);
       return false;
     }
-  };
+  }, [fetchTracks]);
 
-  const submitTrack = async (formData: Omit<Track, 'id'>, selectedTrack: Track | null) => {
+  const submitTrack = useCallback(async (formData: Omit<Track, 'id'>, selectedTrack: Track | null) => {
     try {
       const method = selectedTrack ? 'PUT' : 'POST';
       const url = selectedTrack 
@@ -133,7 +133,7 @@ export const useTracks = (selectedMonth: number, selectedYear: number) => {
       console.error('Error saving track:', error);
       return false;
     }
-  };
+  }, [fetchTracks]);
 
   return {
     tracks,

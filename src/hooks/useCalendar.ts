@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 
 export const useCalendar = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
@@ -7,24 +7,24 @@ export const useCalendar = () => {
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const currentDayRef = useRef<HTMLTableCellElement>(null);
 
-  const getDaysInMonth = () => {
+  const getDaysInMonth = useCallback(() => {
     return new Date(selectedYear, selectedMonth + 1, 0).getDate();
-  };
+  }, [selectedMonth, selectedYear]);
 
-  const isWeekend = (day: number) => {
+  const isWeekend = useCallback((day: number) => {
     const date = new Date(selectedYear, selectedMonth, day);
     return date.getDay() === 0 || date.getDay() === 6;
-  };
+  }, [selectedMonth, selectedYear]);
 
-  const getVisibleDays = () => {
+  const getVisibleDays = useCallback(() => {
     const days = Array.from({ length: getDaysInMonth() }, (_, i) => i + 1);
     return hideWeekends ? days.filter(day => !isWeekend(day)) : days;
-  };
+  }, [getDaysInMonth, hideWeekends, isWeekend]);
 
-  const getWeekday = (day: number) => {
+  const getWeekday = useCallback((day: number) => {
     const date = new Date(selectedYear, selectedMonth, day);
     return date.toLocaleDateString('en-US', { weekday: 'short' });
-  };
+  }, [selectedMonth, selectedYear]);
 
   useEffect(() => {
     const today = new Date();
@@ -44,10 +44,10 @@ export const useCalendar = () => {
     }
   }, [selectedMonth, selectedYear, hideWeekends]);
 
-  const months = [
+  const months = useMemo(() => [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+  ], []);
 
   return {
     selectedMonth,
@@ -58,10 +58,8 @@ export const useCalendar = () => {
     setHideWeekends,
     tableContainerRef,
     currentDayRef,
-    getDaysInMonth,
-    isWeekend,
     getVisibleDays,
     getWeekday,
-    months
+    months,
   };
 };

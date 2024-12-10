@@ -1,21 +1,33 @@
+import { memo, useMemo } from 'react';
+
 interface TableSummaryRowProps {
   getVisibleDays: () => number[];
   getDayTotal: (day: number) => number;
-  getMonthTotal: () => number;
+  monthTotal: number;
 }
 
-export const TableSummaryRow = ({
+export const TableSummaryRow = memo(({
   getVisibleDays,
   getDayTotal,
-  getMonthTotal
+  monthTotal
 }: TableSummaryRowProps) => {
+  const visibleDays = useMemo(() => getVisibleDays(), [getVisibleDays]);
+  
+  const dayTotals = useMemo(() => 
+    visibleDays.map(day => ({
+      day,
+      total: getDayTotal(day)
+    })),
+    [visibleDays, getDayTotal]
+  );
+
   return (
     <tr>
       <td>Total</td>
-      {getVisibleDays().map(day => (
-        <td key={`total-${day}`}>{getDayTotal(day)}</td>
+      {dayTotals.map(({ day, total }) => (
+        <td key={`total-${day}`}>{total}</td>
       ))}
-      <td>{getMonthTotal()}</td>
+      <td>{monthTotal}</td>
     </tr>
   );
-};
+});

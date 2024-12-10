@@ -1,3 +1,4 @@
+import { memo, useMemo } from 'react';
 import styles from './Table.module.css';
 
 interface TableHeadProps {
@@ -8,37 +9,40 @@ interface TableHeadProps {
   selectedYear: number;
 }
 
-export const TableHead = ({
+export const TableHead = memo(({
   getVisibleDays,
   getWeekday,
   currentDayRef,
   selectedMonth,
   selectedYear
 }: TableHeadProps) => {
+  const currentDate = useMemo(() => new Date(), []);
+
+  const renderDayHeader = useMemo(() => (day: number) => {
+    const isCurrentDay =
+      currentDate.getDate() === day &&
+      currentDate.getMonth() === selectedMonth &&
+      currentDate.getFullYear() === selectedYear;
+
+    return (
+      <th
+        key={day}
+        ref={isCurrentDay ? currentDayRef : null}
+        className={isCurrentDay ? styles.currentDay : undefined}
+      >
+        <div>{day}</div>
+        <div>{getWeekday(day)}</div>
+      </th>
+    );
+  }, [currentDate, selectedMonth, selectedYear, currentDayRef, getWeekday]);
+
   return (
     <thead>
       <tr>
         <th>Task</th>
-        {getVisibleDays().map(day => {
-          const isCurrentDay =
-            new Date().getDate() === day &&
-            new Date().getMonth() === selectedMonth &&
-            new Date().getFullYear() === selectedYear;
-          return (
-            <th
-              key={day}
-              ref={isCurrentDay ? currentDayRef : null}
-              className={isCurrentDay ? styles.currentDay : undefined}
-            >
-              <div className={styles.dayHeader}>
-                <span>{day}</span>
-                <span className={styles.weekday}>{getWeekday(day)}</span>
-              </div>
-            </th>
-          );
-        })}
+        {getVisibleDays().map(renderDayHeader)}
         <th>Total</th>
       </tr>
     </thead>
   );
-};
+});

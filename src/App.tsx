@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import styles from './App.module.css';
 import { useTracks } from './hooks/useTracks';
 import { useCalendar } from './hooks/useCalendar';
@@ -6,7 +7,7 @@ import { Header } from './components/Header';
 import { Table } from './components/Table';
 import { TrackModal } from './components/TrackModal';
 
-const App = () => {
+const App = memo(() => {
   const {
     selectedMonth,
     setSelectedMonth,
@@ -43,11 +44,11 @@ const App = () => {
     handleUpdateTrack,
   } = useTrackForm(selectedMonth, selectedYear);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     submitTrack(formData, selectedTrack);
     resetForm();
-  };
+  }, [formData, selectedTrack, submitTrack, resetForm]);
 
   return (
     <div className={styles.container}>
@@ -91,6 +92,6 @@ const App = () => {
       />
     </div>
   );
-};
+});
 
 export default App;

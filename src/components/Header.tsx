@@ -1,3 +1,4 @@
+import { memo, useCallback, useMemo } from 'react';
 import styles from './Header.module.css';
 
 interface HeaderProps {
@@ -11,7 +12,7 @@ interface HeaderProps {
   months: string[];
 }
 
-export const Header = ({
+export const Header = memo(({
   selectedMonth,
   setSelectedMonth,
   selectedYear,
@@ -21,15 +22,36 @@ export const Header = ({
   setIsModalOpen,
   months
 }: HeaderProps) => {
+  const handleMonthChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedMonth(parseInt(e.target.value));
+  }, [setSelectedMonth]);
+
+  const handleYearChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedYear(parseInt(e.target.value));
+  }, [setSelectedYear]);
+
+  const handleWeekendChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setHideWeekends(e.target.checked);
+  }, [setHideWeekends]);
+
+  const handleAddTrack = useCallback(() => {
+    setIsModalOpen(true);
+  }, [setIsModalOpen]);
+
+  const yearOptions = useMemo(() => 
+    Array.from({ length: 5 }, (_, i) => selectedYear - 2 + i), 
+    [selectedYear]
+  );
+
   return (
     <div className={styles.header}>
-      <button className={styles.button} onClick={() => setIsModalOpen(true)}>
+      <button className={styles.button} onClick={handleAddTrack}>
         Add Track
       </button>
       <select
         className={styles.select}
         value={selectedMonth}
-        onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+        onChange={handleMonthChange}
       >
         {months.map((month, index) => (
           <option key={month} value={index}>{month}</option>
@@ -38,9 +60,9 @@ export const Header = ({
       <select
         className={styles.select}
         value={selectedYear}
-        onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+        onChange={handleYearChange}
       >
-        {Array.from({ length: 5 }, (_, i) => selectedYear - 2 + i).map(year => (
+        {yearOptions.map(year => (
           <option key={year} value={year}>{year}</option>
         ))}
       </select>
@@ -50,7 +72,7 @@ export const Header = ({
           id="hideWeekends"
           className={styles.checkbox}
           checked={hideWeekends}
-          onChange={(e) => setHideWeekends(e.target.checked)}
+          onChange={handleWeekendChange}
         />
         <label htmlFor="hideWeekends" className={styles.checkboxLabel}>
           Hide Weekends
@@ -58,4 +80,4 @@ export const Header = ({
       </div>
     </div>
   );
-};
+});

@@ -1,3 +1,4 @@
+import { memo, useMemo, useCallback } from 'react';
 import styles from './TableRow.module.css';
 
 interface Track {
@@ -18,7 +19,7 @@ interface TableRowProps {
   getTaskTotal: (task: string) => number;
 }
 
-export const TableRow = ({
+export const TableRow = memo(({
   task,
   getVisibleDays,
   getDayTracks,
@@ -27,6 +28,47 @@ export const TableRow = ({
   handleDeleteTrack,
   getTaskTotal
 }: TableRowProps) => {
+  const renderTrackActions = useCallback((track: Track) => (
+    <div className={styles.trackActions}>
+      <button 
+        onClick={() => handleUpdateTrack(track)}
+        className={styles.actionButton}
+        title="Edit"
+      >
+        ✎
+      </button>
+      <button 
+        onClick={() => handleDeleteTrack(track.id)}
+        className={`${styles.actionButton} ${styles.deleteButton}`}
+        title="Delete"
+      >
+        ×
+      </button>
+    </div>
+  ), [handleUpdateTrack, handleDeleteTrack]);
+
+  const renderCell = useMemo(() => (day: number) => {
+    const dayTracks = getDayTracks(day, task);
+    if (dayTracks.length === 0) {
+      return <div className={styles.emptyCell}>-</div>;
+    }
+    return (
+      <div className={styles.trackList}>
+        {dayTracks.map(track => (
+          <div key={track.id} className={styles.track}>
+            <div className={styles.trackContent}>
+              <span className={styles.trackName}>{track.name}</span>
+              <span className={styles.trackHours}>{track.hours}h</span>
+            </div>
+            {renderTrackActions(track)}
+          </div>
+        ))}
+      </div>
+    );
+  }, [getDayTracks, task, renderTrackActions]);
+
+  const taskTotal = useMemo(() => getTaskTotal(task), [getTaskTotal, task]);
+
   return (
     <tr>
       <td>{task}</td>
@@ -36,43 +78,10 @@ export const TableRow = ({
           className={styles.cell}
           onClick={() => handleCellClick(day, task)}
         >
-          {(() => {
-            const dayTracks = getDayTracks(day, task);
-            if (dayTracks.length === 0) {
-              return <div className={styles.emptyCell}>-</div>;
-            }
-            return (
-              <div className={styles.trackList}>
-                {dayTracks.map(track => (
-                  <div key={track.id} className={styles.track}>
-                    <div className={styles.trackContent}>
-                      <span className={styles.trackName}>{track.name}</span>
-                      <span className={styles.trackHours}>{track.hours}h</span>
-                    </div>
-                    <div className={styles.trackActions}>
-                      <button
-                        className={styles.actionButton}
-                        onClick={() => handleUpdateTrack(track)}
-                        title="Edit"
-                      >
-                        ✎
-                      </button>
-                      <button
-                        className={`${styles.actionButton} ${styles.deleteButton}`}
-                        onClick={() => handleDeleteTrack(track.id)}
-                        title="Delete"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            );
-          })()}
+          {renderCell(day)}
         </td>
       ))}
-      <td>{getTaskTotal(task)}</td>
+      <td>{taskTotal}</td>
     </tr>
   );
-};
+});
