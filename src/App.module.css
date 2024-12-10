@@ -1,0 +1,310 @@
+.container {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+  position: relative;
+  scroll-behavior: smooth;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  table-layout: fixed;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.table th:first-child,
+.table td:first-child {
+  width: 150px;
+  text-align: left;
+  position: sticky;
+  left: 0;
+  background-color: white;
+  z-index: 1;
+}
+
+.table th:last-child,
+.table td:last-child {
+  width: 100px;
+  font-weight: bold;
+  background-color: #f8f8f8;
+  position: sticky;
+  right: 0;
+  z-index: 1;
+}
+
+.table th:not(:first-child):not(:last-child),
+.table td:not(:first-child):not(:last-child) {
+  width: 180px;
+  min-width: 180px;
+}
+
+.table th {
+  background-color: #f4f4f4;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.table th:first-child {
+  z-index: 3;
+}
+
+.table tr:last-child td {
+  font-weight: bold;
+  background-color: #f8f8f8;
+}
+
+.cell {
+  cursor: pointer;
+  min-width: 80px;
+  padding: 4px !important;
+}
+
+.cell:hover {
+  background-color: #f0f0f0;
+}
+
+.trackList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.track {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  font-size: 12px;
+  position: relative;
+}
+
+.track:hover {
+  background-color: #e9ecef;
+}
+
+.track:hover .trackActions {
+  display: flex;
+}
+
+.trackContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.trackActions {
+  display: none;
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  gap: 4px;
+  background-color: inherit;
+  padding: 0 4px;
+}
+
+.actionButton {
+  padding: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+}
+
+.actionButton:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.deleteButton {
+  color: #dc3545;
+}
+
+.deleteButton:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+.trackName {
+  color: #666;
+  margin-right: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+
+.trackHours {
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.emptyCell {
+  color: #aaa;
+  text-align: center;
+  padding: 4px;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  position: relative;
+  background: white;
+  padding: 20px 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  min-width: 400px;
+  max-width: 90%;
+  z-index: 1001;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form label {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  min-width: 120px;
+  cursor: pointer;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.button + .button {
+  margin-left: 10px;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 16px;
+}
+
+.checkbox {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.checkboxLabel {
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dayHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.weekday {
+  font-size: 12px;
+  color: #666;
+  font-weight: normal;
+}
+
+.currentDay {
+  background-color: #e3f2fd !important;
+}
+
+.currentDay .dayHeader {
+  color: #1976d2;
+}
+
+.currentDay .weekday {
+  color: #1976d2;
+}
+
+.table th.currentDay {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
