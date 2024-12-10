@@ -1,50 +1,46 @@
 import styles from './TrackModal.module.css';
-
-interface Track {
-  id: string;
-  name: string;
-  task: string;
-  hours: number;
-  date: string;
-}
+import { setIsModalOpen, updateFormData, resetForm } from '../store/trackFormSlice';
+import { selectFormData, selectSelectedTrack, selectIsModalOpen } from '../store/selectors/trackFormSelectors';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { addTrack, updateTrack } from '../store/tracksSlice';
 
 interface TrackModalProps {
-  isModalOpen: boolean;
-  setIsModalOpen: (open: boolean) => void;
-  selectedTrack: Track | null;
-  setSelectedTrack: (track: Track | null) => void;
-  formData: {
-    name: string;
-    task: string;
-    hours: number;
-    date: string;
-  };
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  resetForm: () => void;
 }
 
-export const TrackModal = ({
-  isModalOpen,
-  setIsModalOpen,
-  selectedTrack,
-  setSelectedTrack,
-  formData,
-  handleInputChange,
-  handleSubmit,
-  resetForm
-}: TrackModalProps) => {
-  if (!isModalOpen) return null;
+export const TrackModal = () => {
+  const dispatch = useAppDispatch();
+  const formData = useAppSelector(selectFormData);
+  const selectedTrack = useAppSelector(selectSelectedTrack);
+  const isOpen = useAppSelector(selectIsModalOpen);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    dispatch(updateFormData({ [name]: name === 'hours' ? Number(value) : value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (selectedTrack) {
+      dispatch(updateTrack({ ...formData, id: selectedTrack.id }));
+    } else {
+      dispatch(addTrack(formData));
+    }
+    dispatch(resetForm());
+    dispatch(setIsModalOpen(false));
+  };
+
+  if (!isOpen) return null;
 
   return (
-    <div className={styles.modalOverlay} onClick={() => {
-      setIsModalOpen(false);
-      setSelectedTrack(null);
-      resetForm();
-    }}>
-      <div className={styles.modal} onClick={e => e.stopPropagation()}>
-        <h2>{selectedTrack ? 'Edit Track' : 'Add Track'}</h2>
-        <form onSubmit={handleSubmit} className={styles.form}>
+    <div className={styles.modalOverlay}>
+      <div className={styles.modal}>
+        <button
+          className={styles.closeButton}
+          onClick={() => dispatch(setIsModalOpen(false))}
+        >
+          ×
+        </button>
+        <form onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
             <label htmlFor="name">Name:</label>
             <input
@@ -56,7 +52,6 @@ export const TrackModal = ({
               required
             />
           </div>
-
           <div className={styles.formGroup}>
             <label htmlFor="task">Task:</label>
             <input
@@ -68,7 +63,6 @@ export const TrackModal = ({
               required
             />
           </div>
-
           <div className={styles.formGroup}>
             <label htmlFor="hours">Hours:</label>
             <input
@@ -82,7 +76,6 @@ export const TrackModal = ({
               required
             />
           </div>
-
           <div className={styles.formGroup}>
             <label htmlFor="date">Date:</label>
             <input
@@ -94,24 +87,9 @@ export const TrackModal = ({
               required
             />
           </div>
-
-          <div className={styles.buttonGroup}>
-            <button type="submit" className={styles.button}>
-              {selectedTrack ? 'Update' : 'Add'} Track
-            </button>
-            <button
-              type="button"
-              className={styles.button}
-              onClick={() => {
-                setIsModalOpen(false);
-                setSelectedTrack(null);
-                resetForm();
-              }}
-              style={{ backgroundColor: '#6c757d' }}
-            >
-              Cancel
-            </button>
-          </div>
+          <button type="submit" className={styles.submitButton}>
+            {selectedTrack ? 'Update' : 'Add'} Track
+          </button>
         </form>
       </div>
     </div>

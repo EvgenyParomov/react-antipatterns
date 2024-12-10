@@ -1,0 +1,114 @@
+.cell {
+  padding: 8px 36px 8px 8px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  width: 180px !important;
+  min-width: 180px !important;
+  max-width: 180px !important;
+  position: relative;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cell:hover .addButton {
+  opacity: 1;
+}
+
+.track {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+  padding: 4px 8px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  max-width: 100%;
+}
+
+.track:hover {
+  background-color: #e9ecef;
+}
+
+.track:last-child {
+  margin-bottom: 0;
+}
+
+.trackName {
+  cursor: pointer;
+  flex-grow: 1;
+  margin-right: 8px;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.trackHours {
+  color: #666;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.deleteButton {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  opacity: 0;
+  transition: opacity 0.2s, color 0.2s;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+}
+
+.track:hover .deleteButton {
+  opacity: 1;
+}
+
+.deleteButton:hover {
+  color: #c82333;
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+.cell:not(:first-child):not(:last-child) {
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.addButton {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: none;
+  border: none;
+  color: #28a745;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 2px 8px;
+  opacity: 0;
+  transition: opacity 0.2s, color 0.2s, background-color 0.2s;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  width: 28px;
+  height: 28px;
+  z-index: 20;
+}
+
+.addButton:hover {
+  color: #218838;
+  background-color: rgba(40, 167, 69, 0.1);
+}

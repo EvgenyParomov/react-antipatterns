@@ -1,21 +1,23 @@
-interface TableSummaryRowProps {
-  getVisibleDays: () => number[];
-  getDayTotal: (day: number) => number;
-  getMonthTotal: () => number;
-}
+import React from 'react';
+import { useAppSelector } from '../store/hooks';
+import { selectVisibleDays } from '../store/selectors/calendarSelectors';
+import { TableSummaryCell } from './TableSummaryCell';
+import { TableSummaryAllCell } from './TableSummaryAllCell';
+import styles from './TableSummary.module.css';
 
-export const TableSummaryRow = ({
-  getVisibleDays,
-  getDayTotal,
-  getMonthTotal
-}: TableSummaryRowProps) => {
+export const TableSummaryRow: React.FC = () => {
+  const visibleDays = useAppSelector(selectVisibleDays);
+
   return (
-    <tr>
-      <td>Total</td>
-      {getVisibleDays().map(day => (
-        <td key={`total-${day}`}>{getDayTotal(day)}</td>
+    <tr className={styles.summaryRow}>
+      <td className={styles.summaryCell}>Total</td>
+      {visibleDays.map((day) => (
+        <TableSummaryCell
+          key={day}
+          day={day}
+        />
       ))}
-      <td>{getMonthTotal()}</td>
+      <TableSummaryAllCell />
     </tr>
   );
 };

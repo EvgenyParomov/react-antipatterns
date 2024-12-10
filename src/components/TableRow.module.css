@@ -1,86 +1,41 @@
-.trackList {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.row {
+  background-color: #fff;
 }
 
-.track {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4px 8px;
-  background-color: #f8f9fa;
-  border-radius: 4px;
-  font-size: 12px;
-  position: relative;
-}
-
-.track:hover {
-  background-color: #e9ecef;
-}
-
-.track:hover .trackActions {
-  display: flex;
-}
-
-.trackContent {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-}
-
-.trackActions {
-  display: none;
-  position: absolute;
-  right: 4px;
-  top: 50%;
-  transform: translateY(-50%);
-  gap: 4px;
-  background-color: inherit;
-  padding: 0 4px;
-}
-
-.actionButton {
-  padding: 2px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #666;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 3px;
-}
-
-.actionButton:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-.deleteButton {
-  color: #dc3545;
-}
-
-.deleteButton:hover {
-  background-color: rgba(220, 53, 69, 0.1);
-}
-
-.trackName {
-  color: #666;
-  margin-right: 8px;
-  white-space: nowrap;
+.row td:first-child {
+  width: 150px !important;
+  min-width: 150px !important;
+  max-width: 150px !important;
+  text-align: left;
+  position: sticky;
+  left: 0;
+  background-color: white;
+  z-index: 10;
+  border: 1px solid #ddd;
+  padding: 8px;
   overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100px;
-}
-
-.trackHours {
   white-space: nowrap;
-  font-weight: 500;
+  text-overflow: ellipsis;
 }
 
-.emptyCell {
-  color: #aaa;
+.taskCell {
+  font-weight: 500;
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+  position: sticky;
+  left: 0;
+  background-color: white;
+  z-index: 1;
+}
+
+.totalCell {
+  font-weight: bold;
+  padding: 8px;
   text-align: center;
-  padding: 4px;
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+  position: sticky;
+  right: 0;
+  z-index: 1;
 }

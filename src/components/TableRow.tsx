@@ -1,78 +1,40 @@
+import React from 'react';
+import { useAppSelector } from '../store/hooks';
+import { selectTaskTotal } from '../store/selectors/tracksSelectors';
+import { selectVisibleDays, selectSelectedMonth, selectSelectedYear } from '../store/selectors/calendarSelectors';
+import { TableCell } from './TableCell';
 import styles from './TableRow.module.css';
-
-interface Track {
-  id: string;
-  name: string;
-  task: string;
-  hours: number;
-  date: string;
-}
 
 interface TableRowProps {
   task: string;
-  getVisibleDays: () => number[];
-  getDayTracks: (day: number, task: string) => Track[];
-  handleCellClick: (day: number, task: string) => void;
-  handleUpdateTrack: (track: Track) => void;
-  handleDeleteTrack: (trackId: string) => void;
-  getTaskTotal: (task: string) => number;
+  currentDayRef: React.RefObject<HTMLTableCellElement>;
 }
 
-export const TableRow = ({
+export const TableRow: React.FC<TableRowProps> = ({
   task,
-  getVisibleDays,
-  getDayTracks,
-  handleCellClick,
-  handleUpdateTrack,
-  handleDeleteTrack,
-  getTaskTotal
-}: TableRowProps) => {
+  currentDayRef,
+}) => {
+  const selectedMonth = useAppSelector(selectSelectedMonth);
+  const selectedYear = useAppSelector(selectSelectedYear);
+  const visibleDays = useAppSelector(selectVisibleDays);
+  const taskTotal = useAppSelector((state) => 
+    selectTaskTotal(state, task, selectedMonth, selectedYear)
+  );
+
   return (
-    <tr>
-      <td>{task}</td>
-      {getVisibleDays().map(day => (
-        <td
-          key={`${day}-${task}`}
-          className={styles.cell}
-          onClick={() => handleCellClick(day, task)}
-        >
-          {(() => {
-            const dayTracks = getDayTracks(day, task);
-            if (dayTracks.length === 0) {
-              return <div className={styles.emptyCell}>-</div>;
-            }
-            return (
-              <div className={styles.trackList}>
-                {dayTracks.map(track => (
-                  <div key={track.id} className={styles.track}>
-                    <div className={styles.trackContent}>
-                      <span className={styles.trackName}>{track.name}</span>
-                      <span className={styles.trackHours}>{track.hours}h</span>
-                    </div>
-                    <div className={styles.trackActions}>
-                      <button
-                        className={styles.actionButton}
-                        onClick={() => handleUpdateTrack(track)}
-                        title="Edit"
-                      >
-                        ✎
-                      </button>
-                      <button
-                        className={`${styles.actionButton} ${styles.deleteButton}`}
-                        onClick={() => handleDeleteTrack(track.id)}
-                        title="Delete"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            );
-          })()}
-        </td>
+    <tr className={styles.row}>
+      <td className={styles.taskCell}>{task}</td>
+      {visibleDays.map((day) => (
+        <TableCell
+          key={day}
+          day={day}
+          task={task}
+          isCurrentDay={day === new Date().getDate()}
+          currentDayRef={currentDayRef}
+      
+        />
       ))}
-      <td>{getTaskTotal(task)}</td>
+      <td className={styles.totalCell}>{taskTotal}h</td>
     </tr>
   );
 };

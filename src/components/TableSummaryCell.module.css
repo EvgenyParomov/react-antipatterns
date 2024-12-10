@@ -1,0 +1,18 @@
+.cell {
+  font-weight: bold;
+  background-color: #f8f8f8;
+  width: 100px !important;
+  min-width: 100px !important;
+  max-width: 100px !important;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.sticky {
+  position: sticky;
+  right: 0;
+  z-index: 15;
+}

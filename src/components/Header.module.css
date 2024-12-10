@@ -3,6 +3,12 @@
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 20px;
+  gap: 20px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
   gap: 16px;
 }
 
@@ -29,7 +35,11 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .button:hover {
@@ -40,17 +50,18 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: 16px;
 }
 
 .checkbox {
   cursor: pointer;
   width: 16px;
   height: 16px;
+  margin: 0;
 }
 
 .checkboxLabel {
   font-size: 14px;
   cursor: pointer;
   user-select: none;
+  color: #666;
 }

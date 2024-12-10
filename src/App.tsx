@@ -1,96 +1,40 @@
-import styles from './App.module.css';
-import { useTracks } from './hooks/useTracks';
-import { useCalendar } from './hooks/useCalendar';
-import { useTrackForm } from './hooks/useTrackForm';
+import { useEffect } from 'react';
+import { Provider } from 'react-redux';
+import { useAppDispatch, useAppSelector } from './store/hooks';
+import { fetchTracks } from './store/tracksSlice';
 import { Header } from './components/Header';
 import { Table } from './components/Table';
 import { TrackModal } from './components/TrackModal';
+import { Loader } from './components/Loader';
+import styles from './App.module.css';
+import { store } from './store';
 
-const App = () => {
-  const {
-    selectedMonth,
-    setSelectedMonth,
-    selectedYear,
-    setSelectedYear,
-    hideWeekends,
-    setHideWeekends,
-    tableContainerRef,
-    currentDayRef,
-    getVisibleDays,
-    getWeekday,
-    months,
-  } = useCalendar();
+const AppContent = () => {
+  const dispatch = useAppDispatch();
+  const status = useAppSelector(state => state.tracks.status);
 
-  const {
-    getUniqueTasks,
-    getDayTotal,
-    getDayTracks,
-    getMonthTotal,
-    getTaskTotal,
-    handleDeleteTrack,
-    submitTrack
-  } = useTracks(selectedMonth, selectedYear);
-
-  const {
-    isModalOpen,
-    setIsModalOpen,
-    selectedTrack,
-    setSelectedTrack,
-    resetForm,
-    formData,
-    handleInputChange,
-    handleCellClick,
-    handleUpdateTrack,
-  } = useTrackForm(selectedMonth, selectedYear);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    submitTrack(formData, selectedTrack);
-    resetForm();
-  };
+  useEffect(() => {
+    dispatch(fetchTracks());
+  }, [dispatch]);
 
   return (
     <div className={styles.container}>
-      <Header
-        selectedMonth={selectedMonth}
-        setSelectedMonth={setSelectedMonth}
-        selectedYear={selectedYear}
-        setSelectedYear={setSelectedYear}
-        hideWeekends={hideWeekends}
-        setHideWeekends={setHideWeekends}
-        setIsModalOpen={setIsModalOpen}
-        months={months}
-      />
+      <Header />
 
-      <Table
-        tableContainerRef={tableContainerRef}
-        currentDayRef={currentDayRef}
-        getVisibleDays={getVisibleDays}
-        getWeekday={getWeekday}
-        selectedMonth={selectedMonth}
-        selectedYear={selectedYear}
-        getUniqueTasks={getUniqueTasks}
-        getDayTracks={getDayTracks}
-        handleCellClick={handleCellClick}
-        handleUpdateTrack={handleUpdateTrack}
-        handleDeleteTrack={handleDeleteTrack}
-        getTaskTotal={getTaskTotal}
-        getDayTotal={getDayTotal}
-        getMonthTotal={getMonthTotal}
-      />
-
-      <TrackModal
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        selectedTrack={selectedTrack}
-        setSelectedTrack={setSelectedTrack}
-        formData={formData}
-        handleInputChange={handleInputChange}
-        handleSubmit={handleSubmit}
-        resetForm={resetForm}
-      />
+      {status === 'loading' ? <Loader /> : (
+        <main>
+          <Table />
+          <TrackModal />
+        </main>
+      )}
     </div>
   );
 };
+
+const App = () => (
+  <Provider store={store}>
+    <AppContent />
+  </Provider>
+);
 
 export default App;

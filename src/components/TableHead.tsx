@@ -1,43 +1,20 @@
-import styles from './Table.module.css';
+import React from 'react';
+import { useAppSelector } from '../store/hooks';
+import { selectVisibleDays } from '../store/selectors/calendarSelectors';
+import { TableHeadCell } from './TableHeadCell';
+import styles from './TableHead.module.css';
 
-interface TableHeadProps {
-  getVisibleDays: () => number[];
-  getWeekday: (day: number) => string;
-  currentDayRef: React.RefObject<HTMLTableCellElement>;
-  selectedMonth: number;
-  selectedYear: number;
-}
+export const TableHead: React.FC = () => {
+  const visibleDays = useAppSelector(selectVisibleDays);
 
-export const TableHead = ({
-  getVisibleDays,
-  getWeekday,
-  currentDayRef,
-  selectedMonth,
-  selectedYear
-}: TableHeadProps) => {
   return (
-    <thead>
+    <thead className={styles.header}>
       <tr>
-        <th>Task</th>
-        {getVisibleDays().map(day => {
-          const isCurrentDay =
-            new Date().getDate() === day &&
-            new Date().getMonth() === selectedMonth &&
-            new Date().getFullYear() === selectedYear;
-          return (
-            <th
-              key={day}
-              ref={isCurrentDay ? currentDayRef : null}
-              className={isCurrentDay ? styles.currentDay : undefined}
-            >
-              <div className={styles.dayHeader}>
-                <span>{day}</span>
-                <span className={styles.weekday}>{getWeekday(day)}</span>
-              </div>
-            </th>
-          );
-        })}
-        <th>Total</th>
+        <th className={styles.headerCell}>Task</th>
+        {visibleDays.map((day) => (
+          <TableHeadCell key={day} day={day} />
+        ))}
+        <th className={styles.headerCell}>Total</th>
       </tr>
     </thead>
   );

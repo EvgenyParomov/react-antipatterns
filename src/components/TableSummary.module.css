@@ -1,0 +1,38 @@
+.summaryRow {
+  position: relative;
+  bottom: 0;
+  background-color: #f8f8f8;
+  z-index: 10;
+}
+
+.summaryRow td {
+  font-weight: bold;
+  border: 1px solid #ddd;
+  padding: 8px;
+  background-color: #f8f8f8;
+}
+
+.summaryCell {
+  font-weight: bold;
+  background-color: #f8f8f8;
+  padding: 8px;
+  border: 1px solid #ddd;
+  width: 150px !important;
+  min-width: 150px !important;
+  max-width: 150px !important;
+  text-align: left;
+}
+
+.summaryCell:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 15;
+  background-color: #f8f8f8;
+}
+
+.totalCell {
+  position: sticky;
+  right: 0;
+  background-color: #f8f8f8 !important;
+  z-index: 20;
+}

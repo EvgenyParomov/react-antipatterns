@@ -1,0 +1,20 @@
+.dayHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.weekday {
+  font-size: 12px;
+  color: #666;
+  font-weight: normal;
+}
+
+.currentDay {
+  background-color: #e3f2fd !important;
+}
+
+.currentDay .dayHeader {
+  color: #1976d2;
+}

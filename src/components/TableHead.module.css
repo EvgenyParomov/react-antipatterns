@@ -1,0 +1,14 @@
+.header {
+  background-color: #f5f5f5;
+}
+
+.headerCell {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+  font-weight: bold;
+}
+
+.currentDay {
+  background-color: #e3f2fd;
+}
