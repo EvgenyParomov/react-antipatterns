@@ -1,0 +1,93 @@
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+  position: relative;
+  scroll-behavior: smooth;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  table-layout: fixed;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.table th:first-child,
+.table td:first-child {
+  width: 150px;
+  text-align: left;
+  position: sticky;
+  left: 0;
+  background-color: white;
+  z-index: 1;
+}
+
+.table th:last-child,
+.table td:last-child {
+  width: 100px;
+  font-weight: bold;
+  background-color: #f8f8f8;
+  position: sticky;
+  right: 0;
+  z-index: 1;
+}
+
+.table th:not(:first-child):not(:last-child),
+.table td:not(:first-child):not(:last-child) {
+  width: 180px;
+  min-width: 180px;
+}
+
+.table th {
+  background-color: #f4f4f4;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.table th:first-child {
+  z-index: 3;
+}
+
+.table tr:last-child td {
+  font-weight: bold;
+  background-color: #f8f8f8;
+}
+
+.cell {
+  cursor: pointer;
+  min-width: 80px;
+  padding: 4px !important;
+}
+
+.cell:hover {
+  background-color: #f0f0f0;
+}
+
+.dayHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.weekday {
+  font-size: 12px;
+  color: #666;
+  font-weight: normal;
+}
+
+.currentDay {
+  background-color: #e3f2fd !important;
+}
+
+.currentDay .dayHeader {
+  color: #1976d2;
+}
